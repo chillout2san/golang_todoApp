@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  go:
+    container_name: go
+    build:
+      context: ./golang
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    env_file:
+      - ./mysql/.env
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ./golang/src
+        target: /go/srcex
+
+  db:
+    container_name: db
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    tty: true
+    platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./mysql/.env
+    volumes:
+      - type: volume
+        source: mysql_test_volume
+        target: /var/lib/mysql
+
+volumes:
+  mysql_test_volume:
+    name: mysql_test_volume
