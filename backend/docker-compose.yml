@@ -15,8 +15,8 @@ services:
       - db
     volumes:
       - type: bind
-        source: ./golang/src
-        target: /go/srcex
+        source: ./golang/app
+        target: /go/src
 
   db:
     container_name: db

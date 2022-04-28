@@ -1,4 +1,4 @@
-module chillout2san/golang_todoApp
+module crud
 
 go 1.18
 
