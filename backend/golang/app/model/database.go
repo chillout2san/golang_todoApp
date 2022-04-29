@@ -12,12 +12,12 @@ func init() {
 	var err error
 
 	dsn := fmt.Sprintf("%s:%s@tcp(db:3306)/%s?charset=utf8", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_DATABASE"))
-	fmt.Println(dsn)
 	Db, err = sql.Open("mysql", dsn)
 
 	if err != nil {
 		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
+		return
 	}
 
 	err = Db.Ping()
@@ -25,6 +25,7 @@ func init() {
 	if err != nil {
 		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
+		return
 	}
 
 	fmt.Println("Connection has been established!")
