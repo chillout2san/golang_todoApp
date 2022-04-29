@@ -1,11 +1,16 @@
 package main
 
 import (
-	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	_ "crud/model"
+	"crud/model"
+	"crud/controller"
+	"net/http"
 )
 
+var tm = model.CreateTodoModel()
+var tc = controller.CreateTodoController(tm)
+var ro = controller.CreateRouter(tc)
+
 func main() {
-	fmt.Println("main関数が実行された")
+	http.HandleFunc("/fetch-todos", ro.FetchTodos)
+	http.ListenAndServe(":8080", nil)
 }

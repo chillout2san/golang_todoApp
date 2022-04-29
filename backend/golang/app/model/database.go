@@ -1,9 +1,10 @@
 package model
 
 import (
-	"os"
-	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
+	"fmt"
+	"os"
 )
 
 var Db *sql.DB
@@ -22,6 +23,20 @@ func init() {
 
 	err = Db.Ping()
 
+	if err != nil {
+		// TODO: ログの出力方法を検討する
+		fmt.Println(err)
+		return
+	}
+
+	sql := `CREATE TABLE IF NOT EXISTS todos(
+			id varchar(26) not null,
+			name varchar(100) not null,
+			status varchar(100) not null
+		)`
+
+	_, err = Db.Exec(sql)
+	
 	if err != nil {
 		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
