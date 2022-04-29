@@ -1,8 +1,10 @@
 package controller
 
 import (
-	"net/http"
 	"crud/model"
+	"encoding/json"
+	"fmt"
+	"net/http"
 )
 
 type TodoController interface {
@@ -21,7 +23,23 @@ func CreateTodoController(tm model.TodoModel) TodoController {
 }
 
 func (tc *todoController) FetchTodos(w http.ResponseWriter, r *http.Request) {
+	todos, err := tc.tm.FetchTodos()
+	
+	if err != nil {
+		// TODO: ログ出力方法を検討
+		fmt.Println(err)
+	}
+	
+	json, err := json.Marshal(todos)
+	
+	if err != nil {
+		// TODO: ログ出力方法を検討
+		fmt.Println(err)
+	}
 
+	w.Header().Set("Content-Type", "application/json")
+
+	fmt.Fprint(w, string(json))
 }
 
 func (tc *todoController) AddTodo(w http.ResponseWriter, r *http.Request) {

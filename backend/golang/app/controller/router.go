@@ -17,5 +17,5 @@ func CreateRouter(tc TodoController) Router {
 }
 
 func (ro *router) FetchTodos(w http.ResponseWriter, r *http.Request) {
-	
+	ro.tc.FetchTodos(w, r)
 }

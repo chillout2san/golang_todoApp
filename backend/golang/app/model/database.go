@@ -1,10 +1,11 @@
 package model
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 	"fmt"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var Db *sql.DB
@@ -36,7 +37,7 @@ func init() {
 		)`
 
 	_, err = Db.Exec(sql)
-	
+
 	if err != nil {
 		// TODO: ログの出力方法を検討する
 		fmt.Println(err)

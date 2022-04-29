@@ -1,8 +1,8 @@
 package main
 
 import (
-	"crud/model"
 	"crud/controller"
+	"crud/model"
 	"net/http"
 )
 
