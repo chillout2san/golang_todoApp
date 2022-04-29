@@ -1,5 +1,7 @@
+import { Dashboard } from './pages/dashboard'
+
 function App() {
-  return <div>Hello World!</div>
+  return <Dashboard />
 }
 
 export default App
