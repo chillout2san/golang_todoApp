@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"os"
 )
 
 type Router interface {
@@ -17,5 +18,6 @@ func CreateRouter(tc TodoController) Router {
 }
 
 func (ro *router) FetchTodos(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
 	ro.tc.FetchTodos(w, r)
 }
