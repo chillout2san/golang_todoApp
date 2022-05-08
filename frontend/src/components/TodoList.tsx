@@ -33,7 +33,7 @@ export const TodoList = () => {
         <tbody>
           {todos.map((datum, index) => {
             return (
-              <tr key={datum.name}>
+              <tr key={index}>
                 <td className="p-1">{index + 1}</td>
                 <td className="p-1">{omitText(datum.name)}</td>
                 <td className="p-1">{datum.status}</td>

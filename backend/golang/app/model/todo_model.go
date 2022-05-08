@@ -1,8 +1,17 @@
 package model
 
+import (
+	"database/sql"
+	"math/rand"
+	"net/http"
+	"time"
+
+	"github.com/oklog/ulid"
+)
+
 type TodoModel interface {
 	FetchTodos() ([]*Todo, error)
-	AddTodo()
+	AddTodo(r *http.Request) (sql.Result, error)
 	ChangeTodo()
 	DeleteTodo()
 }
@@ -11,8 +20,9 @@ type todoModel struct {
 }
 
 type Todo struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
+	Id     string `json:"id"`
+	Name   string    `json:"name"`
+	Status string    `json:"status"`
 }
 
 func CreateTodoModel() TodoModel {
@@ -48,12 +58,38 @@ func (tm *todoModel) FetchTodos() ([]*Todo, error) {
 	return todos, nil
 }
 
-func (tm *todoModel) AddTodo() {
+func (tm *todoModel) AddTodo(r *http.Request) (sql.Result, error) {
+	err := r.ParseForm()
 
+	if err != nil {
+		return nil, nil
+	}
+
+	t := time.Now()
+	entropy := ulid.Monotonic(rand.New(rand.NewSource(t.UnixNano())), 0)
+	id := ulid.MustNew(ulid.Timestamp(t), entropy)
+
+	req := Todo{
+		Id:     id.String(),
+		Name:   r.FormValue("name"),
+		Status: r.FormValue("status"),
+	}
+
+	sql := `INSERT INTO todos(id, name, status) VALUES(?, ?, ?)`
+
+	result, err := Db.Exec(sql, req.Id, req.Name, req.Status)
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
+
 func (tm *todoModel) ChangeTodo() {
 
 }
+
 func (tm *todoModel) DeleteTodo() {
 
 }

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
 	"crud/controller"
 	"crud/model"
-	"net/http"
+	"flag"
 	"fmt"
+	"net/http"
 )
 
 var tm = model.CreateTodoModel()
@@ -18,7 +18,6 @@ func migrate() {
 	_, err := model.Db.Exec(sql)
 
 	if err != nil {
-		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
 		return
 	}
@@ -33,5 +32,6 @@ func main() {
 		migrate()
 	}
 	http.HandleFunc("/fetch-todos", ro.FetchTodos)
+	http.HandleFunc("/add-todo", ro.AddTodo)
 	http.ListenAndServe(":8080", nil)
 }
