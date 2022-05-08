@@ -1,20 +1,26 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { WORK_ON_PROGRESS } from '../constants'
 import { client } from '../libs/axios'
+import { TodoContext } from '../provider/TodoProvider'
 
 export const InputForm = () => {
   const [todoName, setTodoName] = useState('')
+  const { setTodos } = useContext(TodoContext)
   const onChangeTodoName: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
     setTodoName(event.target.value)
   }
-  const addTodo = () => {
+  const addTodo = async() => {
     const todo = {
       name: todoName,
       status: WORK_ON_PROGRESS,
     }
-    client.post('add-todo', todo)
+    const body = new URLSearchParams(todo)
+    await client.post('add-todo', body)
+    client.get('fetch-todos').then(({ data }) => {
+      setTodos(data)
+    })
   }
   return (
     <div className="w-auto h-30 mb-4 p-4 border border-gray-200 rounded shadow-lg">
