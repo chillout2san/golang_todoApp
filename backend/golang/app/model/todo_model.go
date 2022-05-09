@@ -13,7 +13,7 @@ type TodoModel interface {
 	FetchTodos() ([]*Todo, error)
 	AddTodo(r *http.Request) (sql.Result, error)
 	ChangeTodo()
-	DeleteTodo()
+	DeleteTodo(r *http.Request) (sql.Result, error)
 }
 
 type todoModel struct {
@@ -30,7 +30,7 @@ func CreateTodoModel() TodoModel {
 }
 
 func (tm *todoModel) FetchTodos() ([]*Todo, error) {
-	sql := `SELECT name, status FROM todos`
+	sql := `SELECT id, name, status FROM todos`
 
 	rows, err := Db.Query(sql)
 	if err != nil {
@@ -42,14 +42,15 @@ func (tm *todoModel) FetchTodos() ([]*Todo, error) {
 
 	for rows.Next() {
 		var (
-			name, status string
+			id, name, status string
 		)
 
-		if err := rows.Scan(&name, &status); err != nil {
+		if err := rows.Scan(&id, &name, &status); err != nil {
 			return nil, err
 		}
 
 		todos = append(todos, &Todo{
+			Id: id,
 			Name:   name,
 			Status: status,
 		})
@@ -90,6 +91,20 @@ func (tm *todoModel) ChangeTodo() {
 
 }
 
-func (tm *todoModel) DeleteTodo() {
+func (tm *todoModel) DeleteTodo(r *http.Request) (sql.Result, error) {
+	err := r.ParseForm()
 
+	if err != nil {
+		return nil, nil
+	}
+
+	sql := `DELETE FROM todos WHERE id = ?`
+
+	result, err := Db.Exec(sql, r.FormValue("id"))
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }

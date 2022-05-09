@@ -11,11 +11,22 @@ const omitText = (text: string): string => {
 
 export const TodoList = () => {
   const { todos, setTodos } = useContext(TodoContext)
+
   useEffect(() => {
     client.get('fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }, [])
+
+  const deleteTodo = async (id: string) => {
+    const body = new URLSearchParams({
+      id,
+    })
+    await client.post('delete-todo', body)
+    client.get('fetch-todos').then(({ data }) => {
+      setTodos(data)
+    })
+  }
 
   return (
     <div className="p-4 border border-gray-200 rounded shadow-lg">
@@ -31,19 +42,24 @@ export const TodoList = () => {
           </tr>
         </thead>
         <tbody>
-          {todos.map((datum, index) => {
+          {todos.map((todo, index) => {
             return (
               <tr key={index}>
                 <td className="p-1">{index + 1}</td>
-                <td className="p-1">{omitText(datum.name)}</td>
-                <td className="p-1">{datum.status}</td>
+                <td className="p-1">{omitText(todo.name)}</td>
+                <td className="p-1">{todo.status}</td>
                 <td className="p-1">
                   <button className="px-2 h-7 border border-white rounded bg-teal-400 shadow-md text-white">
                     変更する
                   </button>
                 </td>
                 <td className="p-1">
-                  <button className="px-2 h-7 border border-white rounded bg-teal-400 shadow-md text-white">
+                  <button
+                    className="px-2 h-7 border border-white rounded bg-teal-400 shadow-md text-white"
+                    onClick={() => {
+                      deleteTodo(todo.id)
+                    }}
+                  >
                     削除する
                   </button>
                 </td>

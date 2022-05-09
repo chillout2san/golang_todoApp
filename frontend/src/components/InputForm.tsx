@@ -11,7 +11,8 @@ export const InputForm = () => {
   ) => {
     setTodoName(event.target.value)
   }
-  const addTodo = async() => {
+
+  const addTodo = async () => {
     const todo = {
       name: todoName,
       status: WORK_ON_PROGRESS,
@@ -22,6 +23,7 @@ export const InputForm = () => {
       setTodos(data)
     })
   }
+
   return (
     <div className="w-auto h-30 mb-4 p-4 border border-gray-200 rounded shadow-lg">
       <p className="mb-2 font-bold">新しいタスクを追加する</p>
