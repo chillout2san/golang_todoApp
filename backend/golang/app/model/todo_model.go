@@ -12,7 +12,7 @@ import (
 type TodoModel interface {
 	FetchTodos() ([]*Todo, error)
 	AddTodo(r *http.Request) (sql.Result, error)
-	ChangeTodo()
+	ChangeTodo(r *http.Request) (sql.Result, error)
 	DeleteTodo(r *http.Request) (sql.Result, error)
 }
 
@@ -87,8 +87,27 @@ func (tm *todoModel) AddTodo(r *http.Request) (sql.Result, error) {
 	return result, nil
 }
 
-func (tm *todoModel) ChangeTodo() {
+func (tm *todoModel) ChangeTodo(r *http.Request) (sql.Result, error) {
+	err := r.ParseForm()
 
+	if err != nil {
+		return nil, nil
+	}
+
+	sql := `UPDATE todos SET status = ? WHERE id = ?`
+
+	afterStatus := "作業中"
+	if r.FormValue("status") == "作業中" {
+		afterStatus = "完了"
+	}
+
+	result, err := Db.Exec(sql, afterStatus, r.FormValue("id"))
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
 
 func (tm *todoModel) DeleteTodo(r *http.Request) (sql.Result, error) {

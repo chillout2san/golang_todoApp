@@ -18,6 +18,16 @@ export const TodoList = () => {
     })
   }, [])
 
+  const changeTodo = async (id: string, status: string) => {
+    const body = new URLSearchParams({
+      id,status
+    })
+    await client.post('change-todo', body)
+    client.get('fetch-todos').then(({ data }) => {
+      setTodos(data)
+    })
+  }
+
   const deleteTodo = async (id: string) => {
     const body = new URLSearchParams({
       id,
@@ -49,7 +59,12 @@ export const TodoList = () => {
                 <td className="p-1">{omitText(todo.name)}</td>
                 <td className="p-1">{todo.status}</td>
                 <td className="p-1">
-                  <button className="px-2 h-7 border border-white rounded bg-teal-400 shadow-md text-white">
+                  <button
+                    className="px-2 h-7 border border-white rounded bg-teal-400 shadow-md text-white"
+                    onClick={() => {
+                      changeTodo(todo.id, todo.status)
+                    }}
+                  >
                     変更する
                   </button>
                 </td>

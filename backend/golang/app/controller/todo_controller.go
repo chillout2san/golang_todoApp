@@ -59,7 +59,21 @@ func (tc *todoController) AddTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (tc *todoController) ChangeTodo(w http.ResponseWriter, r *http.Request) {
-	
+	result, err := tc.tm.ChangeTodo(r)
+
+	if err != nil {
+		fmt.Fprint(w, err)
+		return
+	}
+
+	json, err := json.Marshal(result)
+
+	if err != nil {
+		fmt.Fprint(w, err)
+		return
+	}
+
+	fmt.Fprint(w, string(json))
 }
 
 func (tc *todoController) DeleteTodo(w http.ResponseWriter, r *http.Request) {
