@@ -17,7 +17,6 @@ func init() {
 	Db, err = sql.Open("mysql", dsn)
 
 	if err != nil {
-		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
 		return
 	}
@@ -25,7 +24,6 @@ func init() {
 	err = Db.Ping()
 
 	if err != nil {
-		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
 		return
 	}
@@ -39,7 +37,6 @@ func init() {
 	_, err = Db.Exec(sql)
 
 	if err != nil {
-		// TODO: ログの出力方法を検討する
 		fmt.Println(err)
 		return
 	}
