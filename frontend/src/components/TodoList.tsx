@@ -13,7 +13,7 @@ export const TodoList = () => {
   const { todos, setTodos } = useContext(TodoContext)
 
   useEffect(() => {
-    client.get('fetch-todos').then(({ data }) => {
+    client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }, [])
@@ -22,8 +22,8 @@ export const TodoList = () => {
     const body = new URLSearchParams({
       id,status
     })
-    await client.post('change-todo', body)
-    client.get('fetch-todos').then(({ data }) => {
+    await client.post('todo/change-todo', body)
+    client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }
@@ -32,8 +32,8 @@ export const TodoList = () => {
     const body = new URLSearchParams({
       id,
     })
-    await client.post('delete-todo', body)
-    client.get('fetch-todos').then(({ data }) => {
+    await client.post('todo/delete-todo', body)
+    client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }

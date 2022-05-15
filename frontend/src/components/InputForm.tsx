@@ -18,8 +18,8 @@ export const InputForm = () => {
       status: WORK_ON_PROGRESS,
     }
     const body = new URLSearchParams(todo)
-    await client.post('add-todo', body)
-    client.get('fetch-todos').then(({ data }) => {
+    await client.post('todo/add-todo', body)
+    client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }
