@@ -16,11 +16,12 @@ export const TodoList = () => {
     client.get('fetch-todos').then(({ data }) => {
       setTodos(data)
     })
-  }, [])
+  }, [setTodos])
 
   const changeTodo = async (id: string, status: string) => {
     const body = new URLSearchParams({
-      id,status
+      id,
+      status,
     })
     await client.post('change-todo', body)
     client.get('fetch-todos').then(({ data }) => {
