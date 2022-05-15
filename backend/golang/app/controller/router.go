@@ -43,5 +43,6 @@ func (ro *router)HandleTodoRequest(w http.ResponseWriter, r *http.Request) {
 	case prefix + "change-todo":
 		ro.tc.ChangeTodo(w, r)
 	default:
+		w.WriteHeader(405)
 	}
 }
