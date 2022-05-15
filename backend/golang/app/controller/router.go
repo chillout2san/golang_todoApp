@@ -6,10 +6,7 @@ import (
 )
 
 type Router interface {
-	FetchTodos(w http.ResponseWriter, r *http.Request)
-	AddTodo(w http.ResponseWriter, r *http.Request)
-	DeleteTodo(w http.ResponseWriter, r *http.Request)
-	ChangeTodo(w http.ResponseWriter, r *http.Request)
+	HandleRequest()
 }
 
 type router struct {
@@ -20,48 +17,31 @@ func CreateRouter(tc TodoController) Router {
 	return &router{tc}
 }
 
-func (ro *router) FetchTodos(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
-	w.Header().Set("Content-Type", "application/json")
-	ro.tc.FetchTodos(w, r)
+func (ro *router)HandleRequest() {
+	http.HandleFunc("/todo/", ro.HandleTodoRequest)
 }
 
-func (ro *router) AddTodo(w http.ResponseWriter, r *http.Request) {
+func (ro *router)HandleTodoRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
 	w.Header().Set("Content-Type", "application/json")
 
-	// preflightでAPIが二度実行されてしまうことを防ぐ。
-	if r.Method == "OPTIONS" {
-		return
+    // preflightでAPIが二度実行されてしまうことを防ぐ。
+    if r.Method == "OPTIONS" {
+	return
+    }
+
+	prefix := "/todo/"
+
+	switch r.URL.Path {
+	case prefix + "fetch-todos":
+		ro.tc.FetchTodos(w, r)
+	case prefix + "add-todo":
+		ro.tc.AddTodo(w, r)
+	case prefix + "delete-todo":
+		ro.tc.DeleteTodo(w, r)
+	case prefix + "change-todo":
+		ro.tc.ChangeTodo(w, r)
+	default:
 	}
-
-	ro.tc.AddTodo(w, r)
-}
-
-func (ro *router) DeleteTodo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
-	w.Header().Set("Content-Type", "application/json")
-
-	// preflightでAPIが二度実行されてしまうことを防ぐ。
-	if r.Method == "OPTIONS" {
-		return
-	}
-	
-	ro.tc.DeleteTodo(w, r)
-}
-
-func (ro *router) ChangeTodo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
-	w.Header().Set("Content-Type", "application/json")
-
-	// preflightでAPIが二度実行されてしまうことを防ぐ。
-	if r.Method == "OPTIONS" {
-		return
-	}
-	
-	ro.tc.ChangeTodo(w, r)
 }
