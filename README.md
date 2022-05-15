@@ -1,4 +1,5 @@
 ### 起動方法
+#### バックエンドとデータベース
 - ```$ cd backend```
 - ```$ docker compose up -d```
 - ```$ docker compose exec db bash```
@@ -8,7 +9,9 @@
 - ```mysql> exit```
 - ```$ docker compose exec go sh```
 - ```/go/src # go run cmd/main.go -option=migrate```
-- To exit a go container, ```Control + c```
+    - tableを使うためのオプションなので、初回のみ。二回目以降は```go run cmd/main.go```でOK。
+
+#### フロントエンド
 - ```cd ../frontend```
 - ```npm install```
 - ```npm run start```
