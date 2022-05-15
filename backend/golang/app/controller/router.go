@@ -17,19 +17,19 @@ func CreateRouter(tc TodoController) Router {
 	return &router{tc}
 }
 
-func (ro *router)HandleRequest() {
+func (ro *router) HandleRequest() {
 	http.HandleFunc("/todo/", ro.HandleTodoRequest)
 }
 
-func (ro *router)HandleTodoRequest(w http.ResponseWriter, r *http.Request) {
+func (ro *router) HandleTodoRequest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ORIGIN"))
 	w.Header().Set("Content-Type", "application/json")
 
-    // preflightでAPIが二度実行されてしまうことを防ぐ。
-    if r.Method == "OPTIONS" {
-	return
-    }
+	// preflightでAPIが二度実行されてしまうことを防ぐ。
+	if r.Method == "OPTIONS" {
+		return
+	}
 
 	prefix := "/todo/"
 

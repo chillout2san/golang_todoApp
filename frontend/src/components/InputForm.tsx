@@ -13,11 +13,10 @@ export const InputForm = () => {
   }
 
   const addTodo = async () => {
-    const todo = {
+    const body = {
       name: todoName,
       status: WORK_ON_PROGRESS,
     }
-    const body = new URLSearchParams(todo)
     await client.post('todo/add-todo', body)
     client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)

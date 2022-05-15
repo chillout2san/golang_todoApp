@@ -19,20 +19,14 @@ export const TodoList = () => {
   }, [])
 
   const changeTodo = async (id: string, status: string) => {
-    const body = new URLSearchParams({
-      id,status
-    })
-    await client.post('todo/change-todo', body)
+    await client.post('todo/change-todo', { id, status })
     client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
   }
 
   const deleteTodo = async (id: string) => {
-    const body = new URLSearchParams({
-      id,
-    })
-    await client.post('todo/delete-todo', body)
+    await client.post('todo/delete-todo', { id })
     client.get('todo/fetch-todos').then(({ data }) => {
       setTodos(data)
     })
